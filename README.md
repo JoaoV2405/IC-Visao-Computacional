@@ -18,6 +18,13 @@ O processamento dos arquivos `.bag` inclui a leitura e conversão dos dados em i
 3. **Conversão para Nuvem de Pontos:** Os dados de profundidade são normalizados, convertidos para milímetros e transformados em uma nuvem de pontos usando a biblioteca `open3d`.
 4. **Segmentação de Planos:** Utilizando RANSAC, o pano de fundo é removido da nuvem de pontos, deixando apenas os pontos de interesse, nesse caso, os ovos
 
+Exemplo de nuvem pós transformação
+
+
+
+--
+#### [Normalização](src/process_bag.py)
+
 
 ### 3. Modelagem
 Arquiteturas como PointNet++ foram utilizadas para treinar modelos capazes de prever as métricas de qualidade com base nas nuvens de pontos processadas.
