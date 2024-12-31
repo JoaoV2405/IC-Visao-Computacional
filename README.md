@@ -20,10 +20,22 @@ O processamento dos arquivos `.bag` inclui a leitura e conversão dos dados em i
 
 Exemplo de nuvem pós transformação
 
+<img src="https://github.com/user-attachments/assets/7fa551fb-7a81-4e5e-a080-1c6fc0ee22ba" width="400">
 
+#### [Filtragem e Armazenamento]
+Como a etapa de transfomação resulta em uma nuvem de pontos composta de resíduos, foi necessário aplicar uma etapa de filtragem para remover pontos indesejados. Para isso, primeiramente os pontos são agrupados em clusters baseados na densidade espacial utilizando a técnica DBSCAN, assim, cada cluster pode representar um ovo ou um ruído.
 
---
-#### [Normalização](src/process_bag.py)
+Após identificar os clusters, o código verifica o tamanho de cada grupo. Apenas os clusters cujo número de pontos está dentro de um intervalo predefinido são mantidos, eliminando ruídos (clusters pequenos) e grupos irrelevantes (clusters muito grandes).
+
+Caso ainda haja ruído .Para cada cluster, é calculada a excentricidade, que reflete a proporção entre os maiores e menores eixos do cluster. Este cálculo utiliza Análise de Componentes Principais (PCA) para determinar a forma geométrica de cada grupo. Clusters com excentricidade elevada (indicando formas alongadas ou atípicas) são descartados.
+
+Separação e Exportação dos Clusters:
+Os clusters finais, após todas as etapas de filtragem, são salvos em arquivos .ply separados. Este processo organiza os ovos individuais para análises posteriores.
+
+Rotina de Nomeação:
+O código inclui uma rotina de nomeação que associa os clusters exportados a um padrão de identificação sequencial, facilitando o mapeamento dos dados processados para análises adicionais.
+
+Essa abordagem automatiza a segmentação e identificação de ovos em nuvens de pontos, lidando de forma robusta com dados ruidosos e variações de formato. O código é uma peça essencial no pipeline de processamento, garantindo que apenas informações úteis sejam encaminhadas para as etapas seguintes de predição de qualidade.
 
 
 ### 3. Modelagem
