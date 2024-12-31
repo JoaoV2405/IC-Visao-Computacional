@@ -27,35 +27,28 @@ Exemplo de nuvem pós transformação
 
 
 ### 3. Modelagem
-Arquiteturas como PointNet++ foram utilizadas para treinar modelos capazes de prever as métricas de qualidade com base nas nuvens de pontos processadas.
+Arquiteturas como PointNet++ e DGCNN foram utilizadas para treinar modelos capazes de prever as métricas de qualidade com base nas nuvens de pontos processadas. O código carrega nuvens de pontos em formato .ply e realiza a normalização para centralizar os dados na origem e escalá-los para uma esfera unitária. Essas operações garantem que todas as nuvens sejam tratadas de maneira uniforme, independentemente de suas dimensões ou localização original. 
+Tanto as normalizações quanto processamento dos dados de entrada são feitas na classe de dataset customizada chamada Eggshell Dataset, ela vincula cada nuvem de pontos às suas respectivas medições armazenadas em arquivos CSV, os itens retornados são da classe Data do pytorch, cada um contendo os atributos 'pos' (coordenadas dos pontos) e y (métricas associadas).
+
+
 
 ### 4. Avaliação e Ajustes
-As métricas MAE, MSE e R² foram empregadas para avaliar os modelos, e ajustes nos dados e funções de perda foram realizados para mitigar problemas de overfitting e vieses.
+As métricas MAE, MSE e R² foram empregadas para avaliar os modelos, normalizações nos dados e funções de perda foram realizados para mitigar problemas de overfitting e vieses. Além disso, gráficos de dispersão e histogramas de erro são plotados para melhor analisar o comportamento dos dados previstos.
+
+### 5. Etapa atual
+Foi observado um problema de overfitting em ambas arquiteturas de rede neural, ajustes em funções de perda e normalizações não resultaram em melhoras significativas. Está sendo estudado o desempenho dos modelos na previsão de um target ao invés de múltiplos. Além disso, os dados fornecidos para o estudo apresentam um certo desbalanceamento, o que pode estar causando esse vício nas previões, para mitigar esse problema, estão sendo estudados métodos de Data Augmentation.
 
 ## Tecnologias Utilizadas
 
 - **Linguagem de Programação:** Python
 - **Processamento de Nuvens de Pontos:** Open3D
-- **Visualização e Manipulação de Dados:** NumPy, OpenCV
+- **Visualização e Manipulação de Dados:** NumPy, OpenCV, Matplotlib, Pandas, Scikit-Learn
 - **Modelagem:** PyTorch, TensorFlow
-- **Gerenciamento de Dados:** pyrealsense2
 
 ## Referências
 
-- **PointNet++:** Qi, C. R., Yi, L., Su, H., & Guibas, L. J. (2017). PointNet++: Deep Hierarchical Feature Learning on Point Sets in a Metric Space.
-- **Data Augmentation:** Chawla, N. V., et al. (2002). SMOTE: Synthetic Minority Over-sampling Technique.
+-  Qi, C. R., Yi, L., Su, H., & Guibas, L. J. (2017). PointNet++: Deep Hierarchical Feature Learning on Point Sets in a Metric Space.
+-  Phan, A. V., Nguyen, M. L., Nguyen, Y., & Bui, L. (2018). DGCNN: A convolutional neural network over large-scale labeled graphs. Neural Networks
+-  Chawla, N. V., et al. (2002). SMOTE: Synthetic Minority Over-sampling Technique.
+-  Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). Dropout: A Simple Way to Prevent Neural Networks from Overfitting.
 
-## Como Executar
-
-1. Clone o repositório:
-   ```bash
-   git clone <URL>
-   ```
-2. Instale as dependências:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Execute o script principal para processar os arquivos `.bag`:
-   ```bash
-   python process_bag.py --input <path_to_bag_file>
-   ```
