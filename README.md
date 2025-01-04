@@ -8,6 +8,11 @@ Este repositório explora o uso de aprendizado profundo para prever a qualidade 
 ### 1. Coleta de Dados
 Os dados foram capturados usando dispositivos de profundidade que geram arquivos no formato `.bag`. Cada arquivo representa informações tridimensionais dos ovos, que foram convertidas em nuvens de pontos.
 
+Exemplo de nuvem de pontos:
+
+<img src="https://github.com/user-attachments/assets/d060310c-14b2-41be-b2f3-db0a74128b66" width="400">
+
+
 ### 2. Processamento dos Dados
 
 #### [Transformação](src/process_bag.py)
@@ -18,24 +23,24 @@ O processamento dos arquivos `.bag` inclui a leitura e conversão dos dados em i
 3. **Conversão para Nuvem de Pontos:** Os dados de profundidade são normalizados, convertidos para milímetros e transformados em uma nuvem de pontos usando a biblioteca `open3d`.
 4. **Segmentação de Planos:** Utilizando RANSAC, o pano de fundo é removido da nuvem de pontos, deixando apenas os pontos de interesse, nesse caso, os ovos
 
-Exemplo de nuvem pós transformação
+Exemplo de nuvem após transformação
 
 <img src="https://github.com/user-attachments/assets/7fa551fb-7a81-4e5e-a080-1c6fc0ee22ba" width="400">
 
-#### [Filtragem e Armazenamento]
+#### Filtragem e Armazenamento
 Como a etapa de transfomação resulta em uma nuvem de pontos composta de resíduos, foi necessário aplicar uma etapa de filtragem para remover pontos indesejados. Para isso, primeiramente os pontos são agrupados em clusters baseados na densidade espacial utilizando a técnica DBSCAN, assim, cada cluster pode representar um ovo ou um ruído.
 
-Após identificar os clusters, o código verifica o tamanho de cada grupo. Apenas os clusters cujo número de pontos está dentro de um intervalo predefinido são mantidos, eliminando ruídos (clusters pequenos) e grupos irrelevantes (clusters muito grandes).
+Após a formação de clusters, é realizada uma filtragem inicial eliminando clusters com base na sua quantidade de pontos, assim, caso o cluster seja maior ou menor que o limite de um intervalo pré-definido, ele é eliminado da nuvem de pontos geral.
+Caso o número de clusters seja maior ou menor do que a quantidade desejada, é realizada outra filtragem. Utilizando o algoritmo PCA (Principal Component Analysis) é calculada a excentricidade de cada cluster. Clusters com formas mais uniformes, como ovos, geralmente têm uma excentricidade baixa, enquanto resíduos têm uma excentricidade significativamente maior.
 
-Caso ainda haja ruído .Para cada cluster, é calculada a excentricidade, que reflete a proporção entre os maiores e menores eixos do cluster. Este cálculo utiliza Análise de Componentes Principais (PCA) para determinar a forma geométrica de cada grupo. Clusters com excentricidade elevada (indicando formas alongadas ou atípicas) são descartados.
 
 Separação e Exportação dos Clusters:
-Os clusters finais, após todas as etapas de filtragem, são salvos em arquivos .ply separados. Este processo organiza os ovos individuais para análises posteriores.
+Os clusters finais, após todas as etapas de filtragem, são salvos em arquivos .ply separados e nomeados de acordo com catálogos pré-estabelecidos.
 
-Rotina de Nomeação:
-O código inclui uma rotina de nomeação que associa os clusters exportados a um padrão de identificação sequencial, facilitando o mapeamento dos dados processados para análises adicionais.
+Exemplo de nuvem de pontos após clusterização:
 
-Essa abordagem automatiza a segmentação e identificação de ovos em nuvens de pontos, lidando de forma robusta com dados ruidosos e variações de formato. O código é uma peça essencial no pipeline de processamento, garantindo que apenas informações úteis sejam encaminhadas para as etapas seguintes de predição de qualidade.
+<img src="https://github.com/user-attachments/assets/9754e84e-0eb6-4ef4-8e02-d7d496bc7210" width="400">
+
 
 
 ### 3. Modelagem
