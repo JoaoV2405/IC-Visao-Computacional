@@ -1,5 +1,6 @@
 # Previsão da Qualidade da Casca de Ovos
 
+
 ## Sobre o Projeto 
 Este repositório explora o uso de aprendizado profundo para prever a qualidade de cascas de ovos a partir de nuvens de pontos derivadas de capturas de profundidade. Utilizando arquiteturas como PointNet++, DGCNN e técnicas de normalização e data augmentation, o objetivo é desenvolver técnicas de VC para determinar propriedades de cascas de ovos a partir de nuvens de pontos.
 
@@ -15,7 +16,7 @@ Exemplo de nuvem de pontos:
 
 ### 2. Processamento dos Dados
 
-#### [Transformação](src/process_bag.py)
+#### Transformação
 O processamento dos arquivos `.bag` inclui a leitura e conversão dos dados em imagens de profundidade e, posteriormente, em nuvens de pontos tridimensionais. Um exemplo prático deste processo está descrito no código principal. A transformação segue as etapas:
 
 1. **Leitura do Arquivo de Profundidade:** O arquivo de entrada é lido usando a biblioteca `pyrealsense2`, que permite acessar os quadros de profundidade.
@@ -28,11 +29,12 @@ Exemplo de nuvem após transformação
 <img src="https://github.com/user-attachments/assets/7fa551fb-7a81-4e5e-a080-1c6fc0ee22ba" width="400">
 
 #### Filtragem e Armazenamento
+
 Como a etapa de transfomação resulta em uma nuvem de pontos composta de resíduos, foi necessário aplicar uma etapa de filtragem para remover pontos indesejados. Para isso, primeiramente os pontos são agrupados em clusters baseados na densidade espacial utilizando a técnica DBSCAN, assim, cada cluster pode representar um ovo ou um ruído.
 
 Após a formação de clusters, é realizada uma filtragem inicial eliminando clusters com base na sua quantidade de pontos, assim, caso o cluster seja maior ou menor que o limite de um intervalo pré-definido, ele é eliminado da nuvem de pontos geral.
-Caso o número de clusters seja maior ou menor do que a quantidade desejada, é realizada outra filtragem. Utilizando o algoritmo PCA (Principal Component Analysis) é calculada a excentricidade de cada cluster. Clusters com formas mais uniformes, como ovos, geralmente têm uma excentricidade baixa, enquanto resíduos têm uma excentricidade significativamente maior.
 
+Caso o número de clusters seja maior ou menor do que a quantidade desejada, é realizada outra filtragem. Utilizando o algoritmo PCA (Principal Component Analysis) é calculada a excentricidade de cada cluster. Clusters com formas mais uniformes, como ovos, geralmente têm uma excentricidade baixa, enquanto resíduos têm uma excentricidade significativamente maior.
 
 Separação e Exportação dos Clusters:
 Os clusters finais, após todas as etapas de filtragem, são salvos em arquivos .ply separados e nomeados de acordo com catálogos pré-estabelecidos.
@@ -46,7 +48,9 @@ Exemplo de nuvem de pontos após clusterização:
 ### 3. Modelagem
 Arquiteturas como PointNet++ e DGCNN foram utilizadas para treinar modelos capazes de prever as métricas de qualidade com base nas nuvens de pontos processadas. O código carrega nuvens de pontos em formato .ply e realiza a normalização para centralizar os dados na origem e escalá-los para uma esfera unitária. Essas operações garantem que todas as nuvens sejam tratadas de maneira uniforme, independentemente de suas dimensões ou localização original. 
 Tanto as normalizações quanto processamento dos dados de entrada são feitas na classe de dataset customizada chamada Eggshell Dataset, ela vincula cada nuvem de pontos às suas respectivas medições armazenadas em arquivos CSV, os itens retornados são da classe Data do pytorch, cada um contendo os atributos 'pos' (coordenadas dos pontos) e y (métricas associadas).
-
+Para mais detalhes de cada modelo:
+a
+b
 
 
 ### 4. Avaliação e Ajustes
